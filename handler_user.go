@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/anmol-pal/go-tutorial/internal/auth"
 	"github.com/anmol-pal/go-tutorial/internal/database"
 	"github.com/google/uuid"
 	"net/http"
@@ -37,15 +36,6 @@ func (apiCfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Reques
 	respondWithJSON(w, 201, databaseUserToUser(user))
 }
 
-func (apiCfg *apiConfig) handlerGetUserByAPIKey(w http.ResponseWriter, r *http.Request) {
-	apiKey, err := auth.GetAPIKey(r.Header)
-	if err != nil {
-		respondWithError(w, 403, fmt.Sprintf("Error Authenticating: %v", err))
-	}
-
-	user, err := apiCfg.DB.GetUserFromAPIKey(r.Context(), apiKey)
-	if err != nil {
-		respondWithError(w, 403, fmt.Sprintf("Could not fetch User: %v", err))
-	}
+func (apiCfg *apiConfig) handlerGetUserByAPIKey(w http.ResponseWriter, r *http.Request, user database.User) {
 	respondWithJSON(w, 200, databaseUserToUser(user))
 }
